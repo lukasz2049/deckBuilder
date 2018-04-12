@@ -1,0 +1,15 @@
+Fraction,Title EN,Title PL,Attack Type,Attack,Defense,Cost,Image
+Humans,Pikeman,Pikinier,🗡️,10,20,700,placeholder_humans.png
+Humans,Halberdier,Halabardnik,🗡️,15,25,950,placeholder_humans.png
+Humans,Archer,Łucznik,🏹,15,10,650,placeholder_humans.png
+Humans,Marksman,Kusznik,🏹,30,10,1100,placeholder_humans.png
+Humans,Swordsman,Zbrojny,🗡️,40,40,2000,placeholder_humans.png
+Humans,Monk,Kapłan,🔮,50,5,1600,placeholder_humans.png
+Humans,Cavalier,Kawalerzysta,🗡️,30,30,1500,placeholder_humans.png
+Creatures,Gnome,Gnom,🗡️,15,15,750,placeholder_creatures.png
+Creatures,Goblin,Goblin,🗡️,20,20,1000,placeholder_creatures.png
+Creatures,Elf,Elf,🏹,15,10,650,placeholder_creatures.png
+Creatures,High Elf,Wysoki Elf,🏹,30,10,1100,placeholder_creatures.png
+Creatures,Golem,Golem,🗡️,35,50,2050,placeholder_creatures.png
+Creatures,Unicorn,Jednorożec,🔮,40,10,1400,placeholder_creatures.png
+Creatures,Centaur,Centaur,🗡️,30,30,1500,placeholder_creatures.png

@@ -1,0 +1,228 @@
+﻿<!doctype HTML>
+<html>
+<head>
+<style type="text/css">
+body {
+	font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans serif;
+	max-width: 1000px;
+	margin: auto;
+}
+pre {
+    overflow-x: auto;
+	background: #111;
+	color: #EEE;
+	padding: 10px;
+}
+h2, h3 {
+    margin-bottom: 0;
+}
+p {
+	margin-top: 0;
+}
+</style>
+</head>
+
+<body>
+<h1 id="deckbuilder">deckBuilder</h1>
+
+<p>If you want to create a custom deck of cards and know HTML, CSS and basics of PHP - deckBuilder is a perfect tool for you! <br>
+Just fill the CSV file with the data you’ll put on the cards, then create a card template.</p>
+
+<hr>
+
+<h1 id="setting-up">Setting up</h1>
+
+
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-keyword">require_once</span> <span class="hljs-string">'deckBuilder.php'</span>;
+<span class="hljs-variable">$deck</span> = <span class="hljs-keyword">new</span> deckBuilder;
+<span class="hljs-comment">// Language of the deck</span>
+<span class="hljs-variable">$deck</span>-&gt;lang = <span class="hljs-string">'EN'</span>;
+
+<span class="hljs-comment">/**
+* To change settings just uncomment a line and replace default value:
+*/</span>
+<span class="hljs-comment">// Rename type of the deck (can be used for styling)</span>
+<span class="hljs-comment">// $deck-&gt;type = 'default';</span>
+
+<span class="hljs-comment">// Set custom path to the template directory</span>
+<span class="hljs-comment">// $deck-&gt;tplDir = 'tpl/';</span>
+
+<span class="hljs-comment">// Card template file (without .tpl extension)</span>
+<span class="hljs-comment">// $deck-&gt;cardTpl = 'card';</span>
+
+<span class="hljs-comment">// Default field template file (without .tpl extension)</span>
+<span class="hljs-comment">// $deck-&gt;fieldDefTpl = 'fieldDef';</span>
+
+<span class="hljs-variable">$deck</span>-&gt;loadSheet(<span class="hljs-string">'Example deck data.csv'</span>);
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$deck</span>-&gt;render();</code></pre>
+
+<hr>
+
+<h1 id="basics">Basics</h1>
+
+<h2 id="csv-files">CSV Files</h2>
+
+<p>deckBuilder uses CSV (UTF-8 encoding, comma separated) files as database. <br>
+Values in the first row (header row) are used as a field names. <br>
+See example file: <code>Example deck data.csv</code>.</p>
+
+<h3 id="google-docs">Google Docs</h3>
+
+<p>You can easily use spreadsheet from a Google Docs (Google Sheets). <br>
+To do so open the sheet in Google Docs, copy the download link and use it as a file path: <br>
+ <code>File</code> -&gt; <code>Download as</code> -&gt; <code>Comma-separated values</code>  <br>
+Check this <a href="https://docs.google.com/spreadsheets/d/1dIJYT-7GwbX3SKnIa52gBdmc58AdB-qtEoMjCxZLDWQ/edit?usp=sharing">example Google Sheet</a> to test it out.</p>
+
+<p>Example code:</p>
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-variable">$deck</span> = <span class="hljs-keyword">new</span> deckBuilder;
+<span class="hljs-variable">$deck</span>-&gt;loadSheet(<span class="hljs-string">'https://docs.google.com/spreadsheets/u/0/d/1dIJYT-7GwbX3SKnIa52gBdmc58AdB-qtEoMjCxZLDWQ/export?format=csv&amp;id=1dIJYT-7GwbX3SKnIa52gBdmc58AdB-qtEoMjCxZLDWQ&amp;gid=0'</span>);</code></pre>
+
+<hr>
+
+<h1 id="templates">Templates</h1>
+
+<p>Templates are php files with the <code>.tpl</code> extension that returns a string value. <br>
+By default templates are located in the <code>tpl/</code> directory; this can be changed by altering the <code>$tplDir</code> param. <br>
+Two types of templates are used:  <br>
+- <strong>Card template</strong>: template of the whole card; <br>
+- <strong>Field template</strong>: template of a single type of field that can be used in the card template.  <br>
+You can use <code>$this-&gt;type</code> and <code>$this-&gt;lang</code> in both of them to print the type/language of the current deck. <br>
+See directory <code>exampleTpl</code> for examples.</p>
+
+<h2 id="functions">Functions</h2>
+
+<p>Following functions are avaliable in the both types of templates: <br>
+-<code>$this-&gt;safeChars ($string)</code> trims the string and transliterates non-ASCII characters. <br>
+-<code>$this-&gt;stringToFilename ($string)</code> transforms string into filename-safe form (safeChars + removes characters other than alphanumeric, dash, underscore and dot and limits the string length to 250 characters). <br>
+-<code>$this-&gt;stringToSelector ($string)</code> removes characters that aren’t allowed in a CSS selector.</p>
+
+<h2 id="field-template">Field Template</h2>
+
+<p>In the field templates following variables are avaliable: <br>
+- <strong>$fieldName</strong> - name of the field (from the header row). <br>
+- <strong>$fieldClass</strong> - name of the field. <br>
+- <strong>$fieldText</strong> - text from the field. In the default  <code>renderType</code> (<code>html</code>) special characters are converted to HTML entities and HTML line breaks are inserted before all newlines. <br>
+- <strong>$fieldTextHTML</strong> - avaliable only in the default  <code>renderType</code> (<code>html</code>). It returns text from the field as is so HTML code can be used inside those fields.</p>
+
+<hr>
+
+<p>Example Field Template - <strong>fieldDef</strong></p>
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-keyword">return</span> <span class="hljs-string">&lt;&lt;&lt;TPL
+&lt;span class="{$fieldClass}"&gt;{$fieldText}&lt;/span&gt;
+TPL;</span>
+<span class="hljs-preprocessor">?&gt;</span></code></pre>
+
+<p>Returns filtered text inside of a <code>span</code> element.</p>
+
+<hr>
+
+<p>Example Field Template - <strong>ImagePng</strong>:</p>
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-keyword">return</span> <span class="hljs-string">&lt;&lt;&lt;TPL
+&lt;img src="img/{$this-&gt;stringToFilename($fieldText)}.png" class="ImagePNG {$fieldClass}"/&gt;
+TPL;</span>
+<span class="hljs-preprocessor">?&gt;</span></code></pre>
+
+<p>This template will use field text as filename and name of the field as a class.</p>
+
+<hr>
+
+<p>Example Field Template - <strong>NoFiltering</strong>:</p>
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">return</span> <span class="hljs-variable">$fieldTextHTML</span>; <span class="hljs-preprocessor">?&gt;</span></code></pre>
+
+<p>This template will return value of a field as-is, without any filtering of any kind so HTML code can be .</p>
+
+<h2 id="card-template">Card Template</h2>
+
+<p>Card Template is a template of an entire card.</p>
+
+<p>The folllowing function can be called to use a Field Template inside of a Card Template: <br>
+<code>$this-&gt;field ($fieldName, $fieldTpl)</code> <br>
+- <strong>$fieldName</strong>: name of the field without language suffix. <br>
+Example: if in the sheet there are fields <code>Title EN</code> and <code>Title PL</code> simply use <code>Title</code> as a field name. The suffix will be added automatically depending on the <code>lang</code> param of the deck. <br>
+If in the sheet there’s a field with and a field without language suffix (e.g. <code>Title EN</code> and <code>Title</code>), the later one will be used. <br>
+- <strong>$fieldTpl</strong> (<em>optional</em>): name of the field template file (without <code>.tpl</code> extension). If not set default template (<code>fieldDef</code> by default) will be used.</p>
+
+
+
+<h3 id="example-card-template">Example Card Template:</h3>
+
+<pre class="prettyprint"><code class="language-php hljs "><span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-keyword">return</span> <span class="hljs-string">&lt;&lt;&lt;TPL
+&lt;div class="Card type_{$this-&gt;type} lang_{$this-&gt;lang}"&gt;
+{$this-&gt;field('Title')}
+{$this-&gt;field('Power', 'NoFiltering')}
+{$this-&gt;field('Title EN', 'ImagePng')}
+&lt;/div&gt;
+TPL;</span>
+<span class="hljs-preprocessor">?&gt;</span></code></pre>
+
+<p>In this simple example: <br>
+- a filtered Title of the card will be displayed using default template (<code>fieldDef</code>). <br>
+- a non-filtered Description will be displayed using <code>NoFiltering</code> template. <br>
+- an image with filename generated from field <code>Title EN</code> will be displayed (even if the <code>lang</code> is set to other language).</p>
+
+<p>Let’s say the following table is the content of CSV file and <code>lang</code> is set to <code>PL</code>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Title EN</th>
+  <th>Title PL</th>
+  <th align="right">Power</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td>Golden Hammer!</td>
+  <td>Złoty Młot!</td>
+  <td align="right">100%</td>
+</tr>
+</tbody></table>
+
+
+<p>On render following code will be outputted:</p>
+
+<pre class="prettyprint"><code class="language-html hljs "><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"Card type_default lang_PL"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"Title PL"</span>&gt;</span>Złoty Młot!<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+100%
+<span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"img/Golden_Hammer.png"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"ImagePNG Title EN"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<hr>
+
+<h1 id="printing">Printing</h1>
+
+<p>Use your web browser to send the deck directly to your printer or to a PDF file. <br>
+Support for rendering PDF files directly is planned for a future release of deckBuilder. </p>
+
+<p>Remember: for the best result use print units (cm, mm, in, pt, pc) instead of px in a stylesheet.</p>
+
+<h2 id="firefox">Firefox</h2>
+
+<p><code>File</code> &gt; <code>Print preview</code> &gt; <code>Page setup</code> <br>
+In <code>Format &amp; Options</code> check <code>Print background (colors &amp; images)</code> and set scale to 100% <br>
+In <code>Margins &amp; Header/Footer</code> set margins as you need and remove unwanted headers and footers.</p>
+
+<h2 id="chrome">Chrome</h2>
+
+<p><code>Menu</code> &gt; <code>Print...</code>  &gt; <code>More settings</code>: <br>
+- Check option <code>Background graphics</code> ; <br>
+- Uncheck option <code>Headers and footers</code>; <br>
+- Change <code>Color</code> from <code>Black &amp; White</code> to <code>Color</code>; <br>
+- Set <code>Scale</code> to <code>100</code>; <br>
+- Change margins to your needs.</p>
+
+<hr>
+
+<h2 id="credits">Credits</h2>
+
+<p><strong>deckBuilder copyright © 2017 <a href="https://github.com/lukasz2049">lukasz2049</a></strong> <br>
+deckBuilder uses <a href="https://github.com/parsecsv/parsecsv-for-php">parseCSV</a> library by Jim Myhrberg under the MIT license</p>
+</body>
+</html>

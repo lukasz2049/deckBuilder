@@ -1,0 +1,84 @@
+@page {
+  size: A4 landscape;
+}
+
+body {
+	font-family: "Georgia", serif;
+}
+
+div.Card {
+    font-size: 4mm;
+    height: 87mm;
+    overflow: hidden;
+    width: 56mm;
+	display: inline-flex;
+	margin: 0.15mm;
+    border-radius: 5mm;
+}
+div.fraction-Humans {
+    background: #B48F73 none repeat scroll 0 0;
+}
+div.fraction-Humans div.Box {
+    box-shadow: 0 0 2mm -1px black, 0 0 0 1mm #A6851B inset;
+}
+div.fraction-Creatures {
+	background: #8A9984 none repeat scroll 0 0;
+}
+div.fraction-Creatures div.Box {
+    box-shadow: 0 0 2mm -1px black, 0 0 0 1mm #3080ab inset;
+}
+div.Box {
+    background-color: #eee;
+	background-image: url('exampleImg/bg.png');
+	background-size: cover;
+    display: block;
+	margin: 4mm;
+	border-radius: 3mm;
+    position: relative;
+	width: 100%;
+}
+div.Top {
+    margin: 2mm 0mm;
+	font-size: 1em;
+	text-align: center;
+}
+div.Bottom {
+    bottom: 0;
+	margin-bottom: 2mm;
+    position: absolute;
+    width: 100%;
+}
+span.Title {
+    display: block;
+	width: 100%;
+    font-family: "Impact";
+	font-size: 6mm;
+}
+
+div.Middle {
+	text-align: justify;
+	margin: 0 3mm;
+	margin: 0 3mm;
+}
+span.DescTop {
+	display: block;
+}
+img.Image {
+	display: block;
+	margin: auto;
+    max-width: 100%;
+	height: auto;
+	width: auto;
+	max-height: 5.5cm;
+}
+span.BottomLeft {
+    float: left;
+	font-weight: 600;
+    margin: 0 0 0 3mm;
+}
+span.BottomRight {
+    float: right;
+	font-weight: 600;
+    margin: 0 3mm 0 0;
+}
+
